@@ -14,20 +14,34 @@ const initialState = Map({
         {
             name : '이마트 트레이더스 보정점'
         }
-    ])
+    ]),
+    year : 2017,
+    month : 7,
+    date : 17
 })
 
 // 리듀서 함수를 정의합니다.
 const martReducer = (state = initialState, action) => {
     const marts = state.get('marts');
-    console.log("action",action);
+    const year = state.get('year');
+    const month = state.get('month');
+
+
     switch(action.type) {
-        case actionTypes.INCREMENT:
-            return state.set('marts', marts.push({
-                name : "test"
-            }));
-        case actionTypes.DECREMENT:
-            return state.set('marts', marts.splice(action.index, 1));
+        case actionTypes.CHANGE_MONTH:
+            let changedMonth = month +action.change;
+            let changedYear = year;
+            if(changedMonth < 0){
+                changedMonth = 12;
+                changedYear = year-1;
+            }else if(changedMonth > 12){
+                changedMonth = 1;
+                changedYear = year+1;
+            }
+            state = state.set('year',changedYear);
+            state = state.set('month',changedMonth);
+        case actionTypes.SELECT_DATE:
+            state = state.set('date',action.date);
         default:
             return state;
     }
